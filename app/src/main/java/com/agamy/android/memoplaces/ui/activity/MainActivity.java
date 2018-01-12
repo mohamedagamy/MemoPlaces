@@ -244,10 +244,10 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
     }
 
     private void showSnack(boolean isConnected) {
-        String msg = isConnected ? "Connected" : "Disconnected";
+        String msg = isConnected ? getString(R.string.connected) : getString(R.string.disconnected);
         int color = isConnected ? Color.BLUE  : Color.RED;
         final Snackbar snackbar = Snackbar.make(fab , msg,Snackbar.LENGTH_LONG);
-        snackbar.setAction("Close", new View.OnClickListener() {
+        snackbar.setAction(R.string.close, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 snackbar.dismiss();

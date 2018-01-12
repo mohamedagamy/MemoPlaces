@@ -17,4 +17,7 @@
     <string name="map_long_click">تم الضغط لمدة طويلة</string>
     <string name="check_wifi_connection">تأكد من الاتصال بالانترنت </string>
     <string name="perm_denied">تم رفض التصاريح</string>
+    <string name="connected">متصل</string>
+    <string name="disconnected">غير متصل</string>
+    <string name="close">أغلق</string>
 </resources>

@@ -23,4 +23,7 @@
     <string name="map_long_click">Map Long Clicked</string>
     <string name="check_wifi_connection">Check wifi Connection</string>
     <string name="perm_denied">Permission Denied</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="close">Close</string>
 </resources>
