@@ -6,4 +6,21 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hospitals">Hospitals</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="schools">Schools</string>
+    <string name="mohamed_elagamy">Mohamed Elagamy</string>
+    <string name="android_developer">Android Developer</string>
+    <string name="delete_all">Delete All</string>
+    <string name="list_all">List All</string>
+    <string name="delete_all_places">Delete All Places</string>
+    <string name="list_all_places">List All Places</string>
+    <string name="map_ready">Map Ready</string>
+    <string name="near_by_hospitals">Showing Nearby Hospitals</string>
+    <string name="near_by_restaurant">Showing Nearby Restaurants</string>
+    <string name="near_by_schools">Showing Nearby Schools</string>
+    <string name="all_markers_drawn">All Markers has been drawn</string>
+    <string name="map_long_click">Map Long Clicked</string>
+    <string name="check_wifi_connection">Check wifi Connection</string>
+    <string name="perm_denied">Permission Denied</string>
 </resources>

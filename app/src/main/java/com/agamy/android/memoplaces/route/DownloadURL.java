@@ -47,8 +47,11 @@ public class DownloadURL {
             e.printStackTrace();
         }
         finally {
-            inputStream.close();
-            urlConnection.disconnect();
+            if (inputStream != null)
+                inputStream.close();
+
+            if(urlConnection != null)
+                urlConnection.disconnect();
         }
         Log.d("DownloadURL","Returning data= "+data);
 

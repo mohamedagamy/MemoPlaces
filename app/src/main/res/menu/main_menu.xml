@@ -2,16 +2,16 @@
 <menu  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.agamy.android.memoplaces.MainActivity">
+    tools:context="com.agamy.android.memoplaces.ui.activity.MainActivity">
     <item
         android:id="@+id/delete_all"
         android:icon="@android:drawable/ic_menu_delete"
-        android:title="Delete All"
+        android:title="@string/delete_all"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/list_all"
         android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="List All"
+        android:title="@string/list_all"
         app:showAsAction="always" />
 </menu>

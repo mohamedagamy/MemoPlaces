@@ -1,4 +1,4 @@
-package com.agamy.android.memoplaces;
+package com.agamy.android.memoplaces.ui.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -17,20 +18,16 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.agamy.android.memoplaces.R;
 import com.agamy.android.memoplaces.listener.MapListener;
 import com.agamy.android.memoplaces.model.PlaceModel;
 import com.agamy.android.memoplaces.route.DirectionsJSONParser;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,7 +48,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import com.agamy.android.memoplaces.database.PlacesContract.PlacesEntry;
-public class MapsActivity extends FragmentActivity implements Observer, OnMapReadyCallback, GoogleMap.OnMapLongClickListener, LocationListener,MapListener {
+
+public class MapsActivity extends FragmentActivity implements Observer, OnMapReadyCallback, GoogleMap.OnMapLongClickListener, LocationListener, MapListener {
 
     private static final int REQUEST_LOCATION_CODE = 150;
     private Observable mDirectionJsonParserObservable;
@@ -59,20 +57,23 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     LocationManager locationManager;
     Location mLocation;
     PlaceModel mPlaceModel;
-    Marker myPlaceMarker , selectedPlaceMarker;
-    String[] providers = new String[]{LocationManager.GPS_PROVIDER , LocationManager.NETWORK_PROVIDER};
+    Marker myPlaceMarker, selectedPlaceMarker;
+    String[] providers = new String[]{LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER};
     private static final int LOCATION_INTERVAL = 6000;
     private static final float LOCATION_DISTANCE = 0.0f;
     Handler handler;
     Runnable runnable;
     //private GoogleApiClient client;
-    double latitude , longitude;
+    double latitude, longitude;
+    static boolean countOnChangeCalls = false;
+    Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         initComponents();
+        mIntent = getIntent();
 
     }
 
@@ -91,28 +92,36 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         mapFragment.getMapAsync(this);
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     protected void onResume() {
         super.onResume();
 
-        locationManager.requestLocationUpdates(providers[1], LOCATION_INTERVAL, LOCATION_DISTANCE, MapsActivity.this);
-
+        final boolean isGpsEnabled = locationManager.isProviderEnabled(providers[0]);
+        final boolean isNetworkEnabled = locationManager.isProviderEnabled(providers[1]);
+        final String provider = locationManager.getBestProvider(new Criteria() , true);
         handler = new Handler();
-        runnable =new Runnable() {
+        runnable = new Runnable() {
             @Override
             public void run() {
-                //locationManager.requestLocationUpdates(providers[0] ,LOCATION_INTERVAL , LOCATION_DISTANCE,MapsActivity.this);
-                String listItemClickFlag=getIntent().getStringExtra("listItemClickFlag");
-                if (listItemClickFlag != null && listItemClickFlag.equals("true")) {
-                    locationManager.requestLocationUpdates(providers[1], LOCATION_INTERVAL, LOCATION_DISTANCE, MapsActivity.this);
-                    handler.postDelayed(this, 5000);
-                }
+                     //If all permissions Granted "PackageManager.PERMISSION_GRANTED"
+                    if (checkIfPermsGranted()) {
+                        // TODO: Consider calling
+                        try {
+                            //Check if it is the best provider or enabled :))
+                            if (isGpsEnabled || provider.equals(providers[0]))
+                            locationManager.requestLocationUpdates(providers[0], LOCATION_INTERVAL, LOCATION_DISTANCE, MapsActivity.this);
+                            if(isNetworkEnabled || provider.equals(providers[1]))
+                                locationManager.requestLocationUpdates(providers[1], LOCATION_INTERVAL, LOCATION_DISTANCE, MapsActivity.this);
+
+
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
+                        }
+                    }
             }
         };
 
         handler.post(runnable);
-
     }
 
     @Override
@@ -132,6 +141,8 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         if(handler != null && runnable != null)
             handler.removeCallbacks(runnable);
 
+        countOnChangeCalls = false;
+
     }
 
     /**
@@ -143,15 +154,17 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-    @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mapView = googleMap;
         mapView.setOnMapLongClickListener(this);
-        mapView.setMyLocationEnabled(true);
+        try {
+            mapView.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
 
-        Toast.makeText(this, "Map Ready", Toast.LENGTH_SHORT).show();
-        this.onMapReadyNow();
+        Toast.makeText(this, getString(R.string.map_ready), Toast.LENGTH_SHORT).show();
 
         boolean success = false;
         try {
@@ -163,49 +176,34 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
 
         if (!success)
             Log.e("", "Style parsing failed.");
+
+        this.onMapReadyNow();
     }
 
     private void showNearByPlaces()
     {
 
-        String drawerData = getIntent().getStringExtra("CURRENT_TAG");
+        String drawerData = mIntent.getStringExtra("CURRENT_TAG");
         if(drawerData != null) {
-
             Object dataTransfer[] = new Object[2];
-            GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+            GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData(MapsActivity.this);
+            mapView.clear();
+            String url = getUrl(latitude, longitude, drawerData);
+            dataTransfer[0] = mapView;
+            dataTransfer[1] = url;
+            if(Utils.isWifiEnabled(getBaseContext())) {
+                getNearbyPlacesData.execute(dataTransfer);
+            }
+            drawMyLocationMarker();
             switch (drawerData) {
                 case MainActivity.HOSPITAL_TAG:
-                    mapView.clear();
-                    String hospital = "hospital";
-                    String url = getUrl(latitude, longitude, hospital);
-                    dataTransfer[0] = mapView;
-                    dataTransfer[1] = url;
-
-                    getNearbyPlacesData.execute(dataTransfer);
-                    Toast.makeText(MapsActivity.this, "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, getString(R.string.near_by_hospitals), Toast.LENGTH_SHORT).show();
                     break;
-
                 case MainActivity.RESTAURANT_TAG:
-
-                    mapView.clear();
-                    String resturant = "restaurant";
-                    url = getUrl(latitude, longitude, resturant);
-                    dataTransfer[0] = mapView;
-                    dataTransfer[1] = url;
-
-                    getNearbyPlacesData.execute(dataTransfer);
-                    Toast.makeText(MapsActivity.this, "Showing Nearby Restaurants", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(MapsActivity.this, getString(R.string.near_by_restaurant), Toast.LENGTH_SHORT).show();
                     break;
                 case MainActivity.SCHOOL_TAG:
-                    mapView.clear();
-                    String school = "school";
-                    url = getUrl(latitude, longitude, school);
-                    dataTransfer[0] = mapView;
-                    dataTransfer[1] = url;
-
-                    getNearbyPlacesData.execute(dataTransfer);
-                    Toast.makeText(MapsActivity.this, "Showing Nearby Schools", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, getString(R.string.near_by_schools), Toast.LENGTH_SHORT).show();
                     break;
             }
         }
@@ -213,18 +211,16 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     }
 
     private void drawAllItemsMarkers() {
-        Intent intent = getIntent();
-        String listAction = intent.getStringExtra("listAllAction");
+        String listAction = mIntent.getStringExtra("listAllAction");
         if (listAction != null && listAction.equals("true")) {
-            Toast.makeText(this, "All Markers has been drawn", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.all_markers_drawn), Toast.LENGTH_SHORT).show();
             displayDatabaseData();
 
         }
     }
 
     private void drawSelectedItemMarker() {
-        Intent intent = getIntent();
-        mPlaceModel = intent.getParcelableExtra("locInfo");
+        mPlaceModel = mIntent.getParcelableExtra("locInfo");
         if (mPlaceModel != null) {
             if(mPlaceModel.getLatitude() != 0.0) {
                 drawOneMarkerInMap(mPlaceModel.getLatitude(), mPlaceModel.getLongitude(), false);
@@ -233,6 +229,14 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
                 zoomAndDrawMyLocation();
             }
         }
+    }
+
+    private boolean checkIfFabIsClicked()
+    {
+        String isFabClicked = mIntent.getStringExtra("fabClicked");
+        if(isFabClicked != null && isFabClicked.equals("true"))
+            return true;
+        return false;
     }
 
     private void zoomAndDrawMyLocation() {
@@ -277,7 +281,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     @Override
     public void onMapLongClick(LatLng latLng) {
 
-        Toast.makeText(this, "Map Long Clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.map_long_click), Toast.LENGTH_SHORT).show();
         String address = "Marker Icon";
         String country = "";
         if (latLng != null) {
@@ -294,13 +298,18 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            LatLng latLngCountry = new LatLng(lat, lng);
-            mapView.addMarker(new MarkerOptions().position(latLngCountry).title(address).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-            mapView.moveCamera(CameraUpdateFactory.newLatLng(latLngCountry));
-            mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 10));
 
-            PlaceModel placeModel = new PlaceModel(lat, lng, address, country);
-            insertNewPlace(placeModel);
+            if(Utils.isWifiEnabled(getBaseContext())) {
+                LatLng latLngCountry = new LatLng(lat, lng);
+                mapView.addMarker(new MarkerOptions().position(latLngCountry).title(address).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                mapView.moveCamera(CameraUpdateFactory.newLatLng(latLngCountry));
+                mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 10));
+
+                PlaceModel placeModel = new PlaceModel(lat, lng, address, country);
+                insertNewPlace(placeModel);
+            }else {
+                Toast.makeText(this, getString(R.string.check_wifi_connection), Toast.LENGTH_SHORT).show();
+            }
         }
 
     }
@@ -320,6 +329,11 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         latitude = userLocation.getLatitude();
         longitude = userLocation.getLongitude();
 
+        if(!countOnChangeCalls) {
+            showNearByPlaces();
+            countOnChangeCalls = true;
+        }
+
         saveMyLocationToSharedPrefs(mLocation);
         boolean isNewLocation = userLocation.getLatitude() != getMyLocationFromShard().get(0) &&
                 userLocation.getLongitude() != getMyLocationFromShard().get(1);
@@ -334,8 +348,12 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
             if(mLocation != null)
                  srcLocation = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
             //Here Route Track call is made
-            if(DirectionsJSONParser.ParserTask.getPolylineOptions() == null && srcLocation != null && dstLocation != null)
-              drawRoute(srcLocation, dstLocation);
+            if(DirectionsJSONParser.ParserTask.getPolylineOptions() == null && srcLocation != null && dstLocation != null) {
+                if(Utils.isWifiEnabled(MapsActivity.this))
+                  drawRoute(srcLocation, dstLocation);
+                else
+                    Toast.makeText(this, getString(R.string.check_wifi_connection), Toast.LENGTH_SHORT).show();
+            }
             Log.e("Current Location", mLocation.getLatitude() + "" + mLocation.getLongitude());
         }
     }
@@ -359,7 +377,6 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
 
         ArrayList<MarkerOptions> markerOptionsArrayList = new ArrayList<>();
         mapView.clear();
-        drawMyLocationMarker();
         try {
             Cursor cursor = getContentResolver().query(PlacesEntry.CONTENT_URI, null, null, null, null);
             while (cursor != null && !cursor.isAfterLast()) {
@@ -374,18 +391,25 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
                 markerOptionsArrayList.add(markerOptions);
                 cursor.moveToNext();
             }
-
-            zoomToAllMarkersInMap(markerOptionsArrayList);
+            if(cursor.getCount() > 1)
+                zoomToAllMarkersInMap(markerOptionsArrayList);
+            else
+                zoomAndDrawMyLocation();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @SuppressLint("MissingPermission")
     private void drawMyLocationMarker()
     {
-        mLocation = locationManager.getLastKnownLocation(providers[1]);
+        if(checkIfPermsGranted()) {
+            try {
+                mLocation = locationManager.getLastKnownLocation(providers[1]);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
         if (mLocation != null) {
             drawOneMarkerInMap(mLocation.getLatitude(), mLocation.getLongitude(),true);
         }
@@ -432,9 +456,11 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
        //Current Location Marker
         mapView.clear();
 
+        //if wifi not connected or if you from Fab Clicked
+        boolean willZoomToMyLocationOnly = !Utils.isWifiEnabled(getBaseContext()) || checkIfFabIsClicked();
 
-
-        drawMyLocationMarker();
+        if(willZoomToMyLocationOnly)
+            zoomAndDrawMyLocation();
 
         //if one item selected from list
         drawSelectedItemMarker();
@@ -496,16 +522,16 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
 
     public boolean checkLocationPermission()
     {
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)  != PackageManager.PERMISSION_GRANTED )
+        if(checkIfPermsDenied())
         {
 
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION))
+            if (showRationalRequest())
             {
-                ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_LOCATION_CODE);
+                requestPermission();
             }
             else
             {
-                ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_LOCATION_CODE);
+                requestPermission();
             }
             return false;
 
@@ -514,5 +540,53 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
             return true;
     }
 
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.ACCESS_FINE_LOCATION },REQUEST_LOCATION_CODE);
+    }
+
+    private boolean showRationalRequest() {
+        return ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch(requestCode)
+        {
+            case REQUEST_LOCATION_CODE:
+                if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    if(checkIfPermsDenied())
+                    {
+                        try {
+                            mapView.setMyLocationEnabled(true);
+                        } catch (SecurityException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                else
+                {
+                    Toast.makeText(this, getString(R.string.perm_denied) , Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+
+    private boolean checkIfPermsDenied()
+    {
+       boolean isFine =  ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+       boolean isCoarse = ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED;
+
+       return isFine && isCoarse;
+    }
+
+    private boolean checkIfPermsGranted()
+    {
+        boolean isFine =  ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        boolean isCoarse = ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        return isFine && isCoarse;
+    }
 
 }

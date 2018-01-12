@@ -6,19 +6,19 @@
         android:visible="true" >
         <item
             android:id="@+id/nav_hospital"
-            android:title="Hospitals"
+            android:title="@string/hospitals"
             android:checkable="false"
             android:enabled="true"
             android:visible="true" />
         <item
             android:id="@+id/nav_restaurant"
-            android:title="Restaurants"
+            android:title="@string/restaurants"
             android:checkable="false"
             android:enabled="true"
             android:visible="true" />
         <item
             android:id="@+id/nav_school"
-            android:title="Schools"
+            android:title="@string/schools"
             android:checkable="false"
             android:enabled="true"
             android:visible="true" />

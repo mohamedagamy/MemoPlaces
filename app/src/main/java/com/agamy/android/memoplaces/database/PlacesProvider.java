@@ -81,12 +81,16 @@ public class PlacesProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
 
-        final int match = sUriMatcher.match(uri);
+        //int match = sUriMatcher.match(uri);
+         int match = (s == null) ? PLACES : PLACE_ID;
+        int rowid = 0;
         switch (match) {
             case PLACES:
-                return deleteAllPlaces(uri);
+                rowid =  deleteAllPlaces(uri);
+                return rowid;
             case  PLACE_ID:
-                return deleteOnePlace(uri);
+                rowid = deleteOnePlace(uri , strings);
+                return rowid;
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
@@ -112,11 +116,10 @@ public class PlacesProvider extends ContentProvider {
         return ContentUris.withAppendedId(uri, id);
     }
 
-    private int deleteOnePlace(Uri uri) {
+    private int deleteOnePlace(Uri uri, String[] strings) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        String whereClause= PlacesEntry._ID+" =?";
-        String[] whereArgs=new String[]{String.valueOf(ContentUris.parseId(uri))};
-        int rowId = db.delete(PlacesEntry.TABLE_NAME,whereClause,whereArgs);
+        String whereClause= PlacesEntry._ID+" = ?";
+        int rowId = db.delete(PlacesEntry.TABLE_NAME,whereClause,strings);
 
         if(rowId > 0)
             getContext().getContentResolver().notifyChange(uri,null);

@@ -1,8 +1,11 @@
 package com.agamy.android.memoplaces.route;
 
+import android.app.Activity;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.util.Log;
 
+import com.agamy.android.memoplaces.ui.activity.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -18,10 +21,22 @@ import java.util.List;
  */
 
 public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
+    private Activity mContext;
+    public GetNearbyPlacesData(Activity context) {
+        this.mContext = context;
+    }
 
     private String googlePlacesData;
     private GoogleMap mMap;
     String url;
+    Utils utils = new Utils();
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        utils.showProgressDialog(mContext);
+
+    }
 
     @Override
     protected String doInBackground(Object... objects){
@@ -43,9 +58,24 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
         List<HashMap<String, String>> nearbyPlaceList;
         DataParser parser = new DataParser();
-        nearbyPlaceList = parser.parse(s);
-        Log.d("nearbyplacesdata","called parse method");
-        showNearbyPlaces(nearbyPlaceList);
+        if(!s.isEmpty()) {
+            nearbyPlaceList = parser.parse(s);
+            Log.d("nearbyplacesdata", "called parse method");
+            showNearbyPlaces(nearbyPlaceList);
+        }
+
+        new CountDownTimer(1000, 8000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+            @Override
+            public void onFinish() {
+                utils.hideProgressDialog();
+            }
+        }.start();
+
+        super.onPostExecute(s);
     }
 
     private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList)

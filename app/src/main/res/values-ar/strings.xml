@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hospitals">المستشفيات</string>
+    <string name="restaurants">المطاعم</string>
+    <string name="schools">المدارس</string>
+    <string name="mohamed_elagamy">محمد العجمي</string>
+    <string name="android_developer">مطور أندرويد</string>
+    <string name="delete_all">حذف الكل</string>
+    <string name="list_all">عرض الكل</string>
+    <string name="delete_all_places">حذف كل الأماكن</string>
+    <string name="list_all_places">عرض كل الأماكن</string>
+    <string name="map_ready">تم تحميل الخريطة</string>
+    <string name="near_by_hospitals">اظهار المستشفيات القريبة</string>
+    <string name="near_by_restaurant">اظهار المطاعم القريبة</string>
+    <string name="near_by_schools">اظهار المدارس القريبة</string>
+    <string name="all_markers_drawn">تم رسم جميع ايقونات تحديد المكان</string>
+    <string name="map_long_click">تم الضغط لمدة طويلة</string>
+    <string name="check_wifi_connection">تأكد من الاتصال بالانترنت </string>
+    <string name="perm_denied">تم رفض التصاريح</string>
+</resources>

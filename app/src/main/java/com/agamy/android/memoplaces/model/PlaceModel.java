@@ -11,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class PlaceModel implements Parcelable{
 
+    private int id;
     private double latitude;
     private double longitude;
     private String address;
@@ -26,12 +27,23 @@ public class PlaceModel implements Parcelable{
         this.longitude = longitude;
     }
 
+    public PlaceModel(int id , double latitude, double longitude, String address, String country) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.country = country;
+    }
+
     public PlaceModel(double latitude, double longitude, String address, String country) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
         this.country = country;
     }
+
+
+
 
     public PlaceModel(double latitude, double longitude, String address) {
         this.latitude = latitude;
@@ -77,6 +89,11 @@ public class PlaceModel implements Parcelable{
     {
         return new LatLng(latitude , longitude);
     }
+
+    public int getId() {
+        return id;
+    }
+
     @Override
     public int describeContents() {
         return 0;

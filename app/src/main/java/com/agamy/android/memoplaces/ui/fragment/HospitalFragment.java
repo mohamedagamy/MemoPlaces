@@ -1,4 +1,4 @@
-package com.agamy.android.memoplaces.fragment;
+package com.agamy.android.memoplaces.ui.fragment;
 
 
 import android.os.Bundle;
@@ -15,10 +15,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RestaurantFragment extends Fragment implements OnMapReadyCallback{
+public class HospitalFragment extends Fragment implements OnMapReadyCallback{
     public GoogleMap mMap;
 
-    public RestaurantFragment() {
+    public HospitalFragment() {
         // Required empty public constructor
     }
 
@@ -27,11 +27,12 @@ public class RestaurantFragment extends Fragment implements OnMapReadyCallback{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_restaurant, container, false);
+        View view =  inflater.inflate(R.layout.fragment_hospital, container, false);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager()
-                .findFragmentById(R.id.map_restaurant);
+                .findFragmentById(R.id.map_hospital);
         mapFragment.getMapAsync(this);
+
 
         return view;
     }

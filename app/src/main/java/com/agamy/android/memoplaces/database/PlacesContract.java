@@ -26,7 +26,7 @@ public final class PlacesContract{
 
 
         public static final String TABLE_NAME = "places";
-        public static final String COLUMN_PLACE_ID = _ID;
+        public static final String COLUMN_PLACE_ID = BaseColumns._ID;
         public static final String COLUMN_PLACE_ADDRESS = "address";
         public static final String COLUMN_PLACE_COUNTRY = "country";
         public static final String COLUMN_PLACE_LATITUDE = "lat";
@@ -40,7 +40,7 @@ public final class PlacesContract{
         public static final int COLUMN_PLACE_LONGITUDE_INDEX = 4;
 
         public static final String SQL_CREATE_TABLE = " CREATE TABLE "+TABLE_NAME+" ( "
-                +COLUMN_PLACE_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
+                +COLUMN_PLACE_ID+" INTEGER PRIMARY KEY, "
                 +COLUMN_PLACE_ADDRESS+" TEXT, "
                 +COLUMN_PLACE_COUNTRY+" TEXT, "
                 +COLUMN_PLACE_LATITUDE+" REAL, "
