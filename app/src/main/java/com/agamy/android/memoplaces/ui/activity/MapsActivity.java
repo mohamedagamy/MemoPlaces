@@ -334,7 +334,8 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
             countOnChangeCalls = true;
         }
 
-        saveMyLocationToSharedPrefs(mLocation);
+        if(mLocation != null)
+            saveMyLocationToSharedPrefs(mLocation);
         boolean isNewLocation = userLocation.getLatitude() != getMyLocationFromShard().get(0) &&
                 userLocation.getLongitude() != getMyLocationFromShard().get(1);
         if(isNewLocation)

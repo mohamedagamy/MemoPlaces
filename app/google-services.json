@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "219685534831",
+    "firebase_url": "https://memoplaces-99c40.firebaseio.com",
+    "project_id": "memoplaces-99c40",
+    "storage_bucket": "memoplaces-99c40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219685534831:android:239b1b21db541424",
+        "android_client_info": {
+          "package_name": "com.agamy.android.memoplaces"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219685534831-rfpctkfjmu613u38gmknj4qmbp831v4p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.agamy.android.memoplaces",
+            "certificate_hash": "8ee0e2fbfa9aa061865d2167c97197cd83a3d864"
+          }
+        },
+        {
+          "client_id": "219685534831-naj8qsasjocvqmgsu0nnqt0o0ovhsm8h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAJENqMJTjNLRSbVFQl8zmUwZx29bB-i4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219685534831-naj8qsasjocvqmgsu0nnqt0o0ovhsm8h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

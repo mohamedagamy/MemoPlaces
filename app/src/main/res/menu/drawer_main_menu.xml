@@ -7,18 +7,21 @@
         <item
             android:id="@+id/nav_hospital"
             android:title="@string/hospitals"
+            android:icon="@drawable/ic_local_hospital_black_24dp"
             android:checkable="false"
             android:enabled="true"
             android:visible="true" />
         <item
             android:id="@+id/nav_restaurant"
             android:title="@string/restaurants"
+            android:icon="@drawable/ic_restaurant_black_24dp"
             android:checkable="false"
             android:enabled="true"
             android:visible="true" />
         <item
             android:id="@+id/nav_school"
             android:title="@string/schools"
+            android:icon="@drawable/ic_school_black_24dp"
             android:checkable="false"
             android:enabled="true"
             android:visible="true" />
