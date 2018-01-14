@@ -1,5 +1,9 @@
 package com.agamy.android.memoplaces.ui.activity;
 
+import android.content.ContentValues;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -22,6 +26,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 
@@ -35,6 +40,7 @@ import com.agamy.android.memoplaces.database.PlacesContract.PlacesEntry;
 import com.agamy.android.memoplaces.app.MyApp;
 import com.agamy.android.memoplaces.app.MyConnectivityReceiver;
 import com.agamy.android.memoplaces.services.MyJobSevice;
+import com.agamy.android.memoplaces.ui.fragment.EmptyViewFragment;
 import com.firebase.jobdispatcher.Constraint;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
@@ -44,12 +50,18 @@ import com.firebase.jobdispatcher.JobTrigger;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
+import com.gdacciaro.iOSDialog.iOSDialog;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import adapter.CustomAdapter;
 
 public class MainActivity extends AppCompatActivity implements CustomAdapter.OnItemClickListenerInterface, MyConnectivityReceiver.OnNetworkConnectionChange {
 
+    private static final int PLACE_PICKER_REQUEST = 25;
     RecyclerView recyclerView;
     List<PlaceModel> locationList;
     CustomAdapter arrayAdapter;
@@ -71,6 +83,24 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         setContentView(R.layout.activity_main);
         initComponents();
         setUpNavigationDrawer();
+        showDemoPopupDialog();
+    }
+
+    private void showDemoPopupDialog() {
+
+        final iOSDialog iOSDialog = new iOSDialog(MainActivity.this);
+        iOSDialog.setTitle( "Tips to use this app");
+        iOSDialog.setSubtitle("1-Click (bottom right) button \n 2-Choose Place you want \n 3-Swipe/Drag Items Left/Right to delete saved places ");
+        iOSDialog.setPositiveLabel("Ok");
+        iOSDialog.setBoldPositiveLabel(true);
+        iOSDialog.setPositiveListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                iOSDialog.dismiss();
+            }
+        });
+        iOSDialog.show();
+
     }
 
     private void setUpNavigationDrawer() {
@@ -133,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         locationList = new ArrayList<>();
         arrayAdapter = new CustomAdapter(this);
         arrayAdapter.setMyPlaceModels(locationList);
-        recyclerView.setAdapter(arrayAdapter);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -161,17 +190,55 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+        //Now Set Adapter
+        recyclerView.setAdapter(arrayAdapter);
 
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this , MapsActivity.class);
+/*                Intent intent = new Intent(MainActivity.this , MapsActivity.class);
                 intent.putExtra("fabClicked","true");
-                startActivity(intent);
+                startActivity(intent);*/
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                try {
+                    startActivityForResult(builder.build(MainActivity.this), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(this, data);
+                double lat = place.getLatLng().latitude;
+                double lng = place.getLatLng().longitude;
+                String address = place.getAddress().toString();
+                String[] addressArray = place.getAddress().toString().split(",");
+                String country = addressArray[addressArray.length-1];
+
+                PlaceModel placeModel = new PlaceModel(lat, lng, address,country);
+                insertNewPlace(placeModel);
+                displayDatabaseData();
+
+            }
+        }
+    }
+
+    private void insertNewPlace(PlaceModel placeModel) {
+        ContentValues values = new ContentValues();
+        values.put(PlacesEntry.COLUMN_PLACE_LATITUDE, placeModel.getLatitude());
+        values.put(PlacesEntry.COLUMN_PLACE_LONGITUDE, placeModel.getLongitude());
+        values.put(PlacesEntry.COLUMN_PLACE_ADDRESS, placeModel.getAddress());
+        values.put(PlacesEntry.COLUMN_PLACE_COUNTRY, placeModel.getCountry());
+        getContentResolver().insert(PlacesEntry.CONTENT_URI, values);
     }
 
     public void openMap(View view) {
@@ -182,13 +249,21 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
     @Override
     protected void onStart() {
         super.onStart();
-        displayDatabaseData();
+        Log.e("act","OnStart");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.e("act","onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e("act","OnResume");
         MyApp.getInstance().setConnectionListener(this);
+        displayDatabaseData();
     }
 
     private void displayDatabaseData() {
@@ -196,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
             Cursor cursor = getContentResolver().query(PlacesEntry.CONTENT_URI, null, null, null, null);
             locationList.clear();
             while (cursor != null && !cursor.isAfterLast()) {
-                Log.e("cursor_index",""+cursor.getInt(0));
+                //Log.e("cursor_index",""+cursor.getInt(0));
                 int id = cursor.getInt(PlacesEntry.COLUMN_PLACE_ID_INDEX);
                 double lat = cursor.getDouble(PlacesEntry.COLUMN_PLACE_LATITUDE_INDEX);
                 double lng = cursor.getDouble(PlacesEntry.COLUMN_PLACE_LONGITUDE_INDEX);
@@ -206,11 +281,36 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
                 locationList.add(placeModel);
                 cursor.moveToNext();
             }
-            Log.e("cursor_index","=====================================");
             arrayAdapter.setMyPlaceModels(locationList);
+            //loadEmptyFragmentView(arrayAdapter.getItemCount());
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    void loadEmptyFragmentView(int count)
+    {
+
+        if(count == 0)
+        {
+            Fragment fragment = new EmptyViewFragment();
+            //Note We replace , commit
+            if(!fragment.isAdded()) {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment, "empty");
+                fragmentTransaction.commit();
+            }
+        }else{
+            Fragment emptyFragment = getSupportFragmentManager().findFragmentByTag("empty");
+            if(emptyFragment != null) {
+                //Note We remove , commit
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.remove(emptyFragment);
+                fragmentTransaction.commit();
+            }
+        }
+
+
     }
 
     @Override

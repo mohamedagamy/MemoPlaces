@@ -20,4 +20,5 @@
     <string name="connected">متصل</string>
     <string name="disconnected">غير متصل</string>
     <string name="close">أغلق</string>
+    <string name="hello_blank_fragment">لا يوجد أماكن مفضلة حاليا!</string>
 </resources>

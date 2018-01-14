@@ -86,6 +86,8 @@ public class PlacesProvider extends ContentProvider {
         int rowid = 0;
         switch (match) {
             case PLACES:
+
+
                 rowid =  deleteAllPlaces(uri);
                 return rowid;
             case  PLACE_ID:

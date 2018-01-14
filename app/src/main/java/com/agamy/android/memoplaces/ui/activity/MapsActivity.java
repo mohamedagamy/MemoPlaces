@@ -319,7 +319,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         values.put(PlacesEntry.COLUMN_PLACE_LATITUDE, placeModel.getLatitude());
         values.put(PlacesEntry.COLUMN_PLACE_LONGITUDE, placeModel.getLongitude());
         values.put(PlacesEntry.COLUMN_PLACE_ADDRESS, placeModel.getAddress());
-        values.put(PlacesEntry.COLUMN_PLACE_COUNTRY, placeModel.getCountry());
+        //values.put(PlacesEntry.COLUMN_PLACE_COUNTRY, placeModel.getCountry());
         getContentResolver().insert(PlacesEntry.CONTENT_URI, values);
     }
 
@@ -514,7 +514,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         googlePlaceUrl.append("&radius="+10000);
         googlePlaceUrl.append("&type="+nearbyPlace);
         googlePlaceUrl.append("&sensor=true");
-        googlePlaceUrl.append("&key="+"AIzaSyCzBDc73H9bFY84hSTJFXzrpwFJ6SKiOjM");
+        googlePlaceUrl.append("&key="+getString(R.string.google_api_key));
 
         Log.d("MapsActivity", "url = "+googlePlaceUrl.toString());
 
