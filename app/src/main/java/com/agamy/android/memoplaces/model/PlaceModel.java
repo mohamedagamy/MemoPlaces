@@ -108,6 +108,12 @@ public class PlaceModel implements Parcelable{
 
     @Override
     public String toString() {
-        return address;
+        return "PlaceModel{" +
+                "id=" + id +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", address='" + address + '\'' +
+                ", country='" + country + '\'' +
+                '}';
     }
 }

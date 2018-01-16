@@ -21,4 +21,18 @@
     <string name="disconnected">غير متصل</string>
     <string name="close">أغلق</string>
     <string name="hello_blank_fragment">لا يوجد أماكن مفضلة حاليا!</string>
+    <string name="bus_station">محطة الأتوبيس</string>
+    <string name="train_station">محطة القطار</string>
+    <string name="gas_station">محطة البنزين</string>
+    <string name="near_by_bus_station">اظهار محطات الاتوبيس القريبة</string>
+    <string name="near_by_train_station">اظهار محطات القطار القريبة</string>
+    <string name="near_by_gas_station"> اظهار محطات البنزين القريبة</string>
+    <string name="far_from_hospitals">لا يوجد مستفيات قريبة للأسف!</string>
+    <string name="far_from_restaurant">لا يوجد مطاعم قريبة للأسف!</string>
+    <string name="far_from_schools">لا يوجد مدارس قريبة للأسف!</string>
+    <string name="far_from_bus_station">لا يوجد محطات أتوبيس قريبة للأسف!</string>
+    <string name="far_from_train_station">لا يوجد محطات قطار قريبة للأسف!</string>
+    <string name="far_from_gas_station">لا يوجد محطات قطار قريبة للأسف!</string>
+    <string name="stations">المحطات القريبة</string>
+    <string name="settings">الاعدادات</string>
 </resources>

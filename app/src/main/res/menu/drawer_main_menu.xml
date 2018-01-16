@@ -26,4 +26,35 @@
             android:enabled="true"
             android:visible="true" />
     </group>
+
+    <item android:enabled="true" android:title="@string/stations">
+        <menu>
+
+            <item
+                android:id="@+id/nav_bus_station"
+                android:title="@string/bus_station"
+                android:icon="@drawable/ic_directions_bus_black_24dp"
+                android:checkable="false"
+                android:enabled="true"
+                android:visible="true" />
+
+            <item
+                android:id="@+id/nav_train_station"
+                android:title="@string/train_station"
+                android:icon="@drawable/ic_train_black_24dp"
+                android:checkable="false"
+                android:enabled="true"
+                android:visible="true" />
+
+            <item
+                android:id="@+id/nav_gas_station"
+                android:title="@string/gas_station"
+                android:icon="@drawable/ic_local_gas_station_black_24dp"
+                android:checkable="false"
+                android:enabled="true"
+                android:visible="true" />
+
+        </menu>
+
+    </item>
 </menu>

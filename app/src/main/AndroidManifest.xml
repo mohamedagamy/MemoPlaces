@@ -9,23 +9,22 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
         android:name=".app.MyApp"
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme"
         android:largeHeap="true"
-        android:hardwareAccelerated="false"
-        >
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/AppTheme"
+        android:supportsRtl="true">
         <activity android:name=".ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,6 +47,16 @@
         <activity
             android:name=".ui.activity.MapsActivity"
             android:label="@string/title_activity_maps"
+            android:launchMode="singleTask"
+            android:parentActivityName=".ui.activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agamy.android.memoplaces.ui.activity.MainActivity" />
+        </activity>
+
+            <activity
+            android:name=".ui.activity.SettingsActivity"
+                android:label="@string/settings"
             android:parentActivityName=".ui.activity.MainActivity"
             >
             <meta-data
@@ -58,18 +67,18 @@
         <provider
             android:name=".database.PlacesProvider"
             android:authorities="com.agamy.android.memoplaces"
-            android:exported="false"/>
+            android:exported="false" />
 
-        <receiver android:name=".app.MyConnectivityReceiver"
+        <receiver
+            android:name=".app.MyConnectivityReceiver"
             android:enabled="true">
-
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
-
         </receiver>
 
-<!--        <service android:exported="false" android:name=".services.MyJobSevice">
+        <!--
+            <service android:exported="false" android:name=".services.MyJobSevice">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
             </intent-filter>
@@ -87,7 +96,8 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
-        </service>-->
+        </service>
+        -->
     </application>
 
 </manifest>

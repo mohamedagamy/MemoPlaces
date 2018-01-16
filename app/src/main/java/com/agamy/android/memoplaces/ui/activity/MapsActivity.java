@@ -28,6 +28,12 @@ import com.agamy.android.memoplaces.R;
 import com.agamy.android.memoplaces.listener.MapListener;
 import com.agamy.android.memoplaces.model.PlaceModel;
 import com.agamy.android.memoplaces.route.DirectionsJSONParser;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,15 +49,18 @@ import com.agamy.android.memoplaces.route.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import com.agamy.android.memoplaces.database.PlacesContract.PlacesEntry;
+import static com.agamy.android.memoplaces.ui.activity.Constants.*;
 
-public class MapsActivity extends FragmentActivity implements Observer, OnMapReadyCallback, GoogleMap.OnMapLongClickListener, LocationListener, MapListener {
+public class MapsActivity extends FragmentActivity implements Observer, OnMapReadyCallback, LocationListener, MapListener {
 
     private static final int REQUEST_LOCATION_CODE = 150;
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 26;
     private Observable mDirectionJsonParserObservable;
     public static GoogleMap mapView;
     LocationManager locationManager;
@@ -67,13 +76,18 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     double latitude, longitude;
     static boolean countOnChangeCalls = false;
     Intent mIntent;
+    static String validKey = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         initComponents();
         mIntent = getIntent();
+
+        List<String> keys = Arrays.asList(FLOATING_ACTION_CLICK,RECYCLER_ITEM_CLICK,LIST_ALL_CLICK);
+        validKey = getIntentKeyWithTrueExtras(keys);
 
     }
 
@@ -157,14 +171,11 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mapView = googleMap;
-        mapView.setOnMapLongClickListener(this);
         try {
             mapView.setMyLocationEnabled(true);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-
-        Toast.makeText(this, getString(R.string.map_ready), Toast.LENGTH_SHORT).show();
 
         boolean success = false;
         try {
@@ -183,60 +194,52 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     private void showNearByPlaces()
     {
 
-        String drawerData = mIntent.getStringExtra("CURRENT_TAG");
-        if(drawerData != null) {
+        String fragmentTag = mIntent.getStringExtra(FRAGMENT_CURRENT_TAG);
+        if(fragmentTag != null) {
             Object dataTransfer[] = new Object[2];
-            GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData(MapsActivity.this);
+            GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData(MapsActivity.this,fragmentTag);
             mapView.clear();
-            String url = getUrl(latitude, longitude, drawerData);
+            zoomAndDrawMyLocation();
+
+            String url = getUrl(latitude, longitude, fragmentTag);
             dataTransfer[0] = mapView;
             dataTransfer[1] = url;
             if(Utils.isWifiEnabled(getBaseContext())) {
                 getNearbyPlacesData.execute(dataTransfer);
             }
-            drawMyLocationMarker();
-            switch (drawerData) {
-                case MainActivity.HOSPITAL_TAG:
-                    Toast.makeText(MapsActivity.this, getString(R.string.near_by_hospitals), Toast.LENGTH_SHORT).show();
-                    break;
-                case MainActivity.RESTAURANT_TAG:
-                    Toast.makeText(MapsActivity.this, getString(R.string.near_by_restaurant), Toast.LENGTH_SHORT).show();
-                    break;
-                case MainActivity.SCHOOL_TAG:
-                    Toast.makeText(MapsActivity.this, getString(R.string.near_by_schools), Toast.LENGTH_SHORT).show();
-                    break;
-            }
         }
 
     }
 
-    private void drawAllItemsMarkers() {
-        String listAction = mIntent.getStringExtra("listAllAction");
-        if (listAction != null && listAction.equals("true")) {
-            Toast.makeText(this, getString(R.string.all_markers_drawn), Toast.LENGTH_SHORT).show();
-            displayDatabaseData();
-
-        }
-    }
-
-    private void drawSelectedItemMarker() {
-        mPlaceModel = mIntent.getParcelableExtra("locInfo");
+    private void drawSelectedRecyclerItemMarker() {
+        mPlaceModel = mIntent.getParcelableExtra(Constants.PLACE_MODEL_OBJECT);
         if (mPlaceModel != null) {
             if(mPlaceModel.getLatitude() != 0.0) {
                 drawOneMarkerInMap(mPlaceModel.getLatitude(), mPlaceModel.getLongitude(), false);
                 zoomToSelectedAndMyMarkers();
-            }else {
-                zoomAndDrawMyLocation();
+                return;//exit function if placemodel exist otherwise will zoom to my location
             }
         }
+        zoomAndDrawMyLocation();
     }
 
-    private boolean checkIfFabIsClicked()
+    private void callWhenFabIsClicked()
     {
-        String isFabClicked = mIntent.getStringExtra("fabClicked");
-        if(isFabClicked != null && isFabClicked.equals("true"))
-            return true;
-        return false;
+        try {
+
+            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                    .setCountry("EG")
+                    .build();
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setFilter(typeFilter)
+                            .build(MapsActivity.this);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+            //startActivityForResult(builder.build(MainActivity.this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
     }
 
     private void zoomAndDrawMyLocation() {
@@ -247,7 +250,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
 
     private void drawOneMarkerInMap(double lat, double lng , boolean isCurrentLocation) {
 
-        String address = new String("default");
+        String address = "default";
         Geocoder geocoder = new Geocoder(this);
         try {
             List<Address> addressList = geocoder.getFromLocation(lat, lng, 1);
@@ -276,42 +279,6 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onMapLongClick(LatLng latLng) {
-
-        Toast.makeText(this, getString(R.string.map_long_click), Toast.LENGTH_SHORT).show();
-        String address = "Marker Icon";
-        String country = "";
-        if (latLng != null) {
-            double lat = latLng.latitude;
-            double lng = latLng.longitude;
-            // Add a marker in Sydney and move the camera
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                List<Address> addressList = geocoder.getFromLocation(lat, lng, 1);
-                if (addressList != null && addressList.size() > 0) {
-                    address = addressList.get(0).getAddressLine(0);
-                    country = addressList.get(0).getCountryName();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if(Utils.isWifiEnabled(getBaseContext())) {
-                LatLng latLngCountry = new LatLng(lat, lng);
-                mapView.addMarker(new MarkerOptions().position(latLngCountry).title(address).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-                mapView.moveCamera(CameraUpdateFactory.newLatLng(latLngCountry));
-                mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), 10));
-
-                PlaceModel placeModel = new PlaceModel(lat, lng, address, country);
-                insertNewPlace(placeModel);
-            }else {
-                Toast.makeText(this, getString(R.string.check_wifi_connection), Toast.LENGTH_SHORT).show();
-            }
-        }
-
     }
 
     private void insertNewPlace(PlaceModel placeModel) {
@@ -353,7 +320,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
                 if(Utils.isWifiEnabled(MapsActivity.this))
                   drawRoute(srcLocation, dstLocation);
                 else
-                    Toast.makeText(this, getString(R.string.check_wifi_connection), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.check_wifi_connection), Toast.LENGTH_LONG).show();
             }
             Log.e("Current Location", mLocation.getLatitude() + "" + mLocation.getLongitude());
         }
@@ -378,8 +345,9 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
 
         ArrayList<MarkerOptions> markerOptionsArrayList = new ArrayList<>();
         mapView.clear();
+        Cursor cursor = null;
         try {
-            Cursor cursor = getContentResolver().query(PlacesEntry.CONTENT_URI, null, null, null, null);
+            cursor = getContentResolver().query(PlacesEntry.CONTENT_URI, null, null, null, null);
             while (cursor != null && !cursor.isAfterLast()) {
                 double lat = cursor.getDouble(PlacesEntry.COLUMN_PLACE_LATITUDE_INDEX);
                 double lng = cursor.getDouble(PlacesEntry.COLUMN_PLACE_LONGITUDE_INDEX);
@@ -392,13 +360,16 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
                 markerOptionsArrayList.add(markerOptions);
                 cursor.moveToNext();
             }
-            if(cursor.getCount() > 1)
+            if(cursor != null && cursor.getCount() > 1)
                 zoomToAllMarkersInMap(markerOptionsArrayList);
             else
                 zoomAndDrawMyLocation();
 
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            if(cursor != null)
+                cursor.close();
         }
     }
 
@@ -454,20 +425,27 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     @Override
     public void onMapReadyNow() {
         //Here All Markers updates according to Intent Extras
-       //Current Location Marker
         mapView.clear();
 
-        //if wifi not connected or if you from Fab Clicked
-        boolean willZoomToMyLocationOnly = !Utils.isWifiEnabled(getBaseContext()) || checkIfFabIsClicked();
+        switch (validKey)
+        {
+            case LIST_ALL_CLICK:
+                //If List All Markers
+                displayDatabaseData();
+                break;
+            case FLOATING_ACTION_CLICK:
+                callWhenFabIsClicked();
+                break;
 
-        if(willZoomToMyLocationOnly)
+            case RECYCLER_ITEM_CLICK:
+                //if one item selected from list
+                drawSelectedRecyclerItemMarker();
+                break;
+        }
+
+        if(!Utils.isWifiEnabled(getBaseContext()))
             zoomAndDrawMyLocation();
 
-        //if one item selected from list
-        drawSelectedItemMarker();
-
-        //If List All in Menu is Choosen
-        drawAllItemsMarkers();
 
     }
 
@@ -477,7 +455,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
             mapView.clear();
             mapView.addPolyline(DirectionsJSONParser.ParserTask.getPolylineOptions());
             drawMyLocationMarker();
-            drawSelectedItemMarker();
+            drawSelectedRecyclerItemMarker();
         }
 
     }
@@ -521,7 +499,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         return googlePlaceUrl.toString();
     }
 
-    public boolean checkLocationPermission()
+    public void checkLocationPermission()
     {
         if(checkIfPermsDenied())
         {
@@ -534,11 +512,8 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
             {
                 requestPermission();
             }
-            return false;
 
         }
-        else
-            return true;
     }
 
     private void requestPermission() {
@@ -588,6 +563,51 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         boolean isCoarse = ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
         return isFine && isCoarse;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+
+            switch (resultCode)
+            {
+                case RESULT_OK:
+                    Place place = PlacePicker.getPlace(this, data);
+                    double lat = place.getLatLng().latitude;
+                    double lng = place.getLatLng().longitude;
+                    String address = place.getAddress().toString();
+                    String[] addressArray = place.getAddress().toString().split(",");
+                    String country = addressArray[addressArray.length-1];
+
+                    PlaceModel placeModel = new PlaceModel(lat, lng, address,country);
+                    insertNewPlace(placeModel);
+
+                    //Clear Map , Draw One Marker , Animate Camera to that Location
+                    mapView.clear();
+                    drawOneMarkerInMap(lat,lng,false);
+                    mapView.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),16.0f));
+
+                    break;
+
+                case RESULT_CANCELED:
+                      zoomAndDrawMyLocation();
+
+                    break;
+            }
+        }
+    }
+
+    String getIntentKeyWithTrueExtras(List<String> key)
+    {
+        for(String mykey : key)
+        {
+            String loopKey = mIntent.getStringExtra(mykey);
+            if(loopKey != null && loopKey.equals(Constants.TRUE))
+            {
+               return mykey;
+            }
+        }
+
+        return "";
     }
 
 }
