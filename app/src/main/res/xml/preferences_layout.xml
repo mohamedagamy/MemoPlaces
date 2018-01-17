@@ -2,9 +2,29 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/settings"
     >
+    <PreferenceCategory
+        android:title="Theme">
     <ListPreference android:entries="@array/themes_values"
     android:entryValues="@array/themes_keys"
     android:title="Choose your theme"
     android:enabled="true"
     android:key="@string/prefs_theme_key"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Personal Details">
+    <EditTextPreference
+        android:title="Enter your name"
+        android:enabled="true"
+        android:key="@string/prefs_name_key"
+        />
+    <EditTextPreference
+        android:title="Enter your job title"
+        android:enabled="true"
+        android:key="@string/prefs_job_key"
+        />
+    </PreferenceCategory>
+
+
+
 </PreferenceScreen>

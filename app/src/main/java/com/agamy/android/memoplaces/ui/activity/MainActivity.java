@@ -35,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -87,8 +88,9 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
     //public static String CURRENT_TAG = "";
     //KProgressHUD progressHUD;
     SharedPreferences mSharedPreferences;
-    ImageView profileImage;
-    //public static final String DRAWER_ITEM_CLICK="drawerItemClick";
+    ImageView profileBackgroundImage;
+    ImageView profilePicture;
+    TextView profileName , profileJobTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,18 +107,23 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         String myTheme = mSharedPreferences.getString(getString(R.string.prefs_theme_key), "");
+        String myName = mSharedPreferences.getString(getString(R.string.prefs_name_key), "");
+        String myJobTitle = mSharedPreferences.getString(getString(R.string.prefs_job_key), "");
+
+        profileName.setText(myName);
+        profileJobTitle.setText(myJobTitle);
         switch (myTheme) {
             case "AppTheme":
-                profileImage.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                profileBackgroundImage.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 break;
             case "AppThemeOrange":
-                profileImage.setBackgroundColor(getResources().getColor(R.color.colorPrimaryOrange));
+                profileBackgroundImage.setBackgroundColor(getResources().getColor(R.color.colorPrimaryOrange));
                 break;
             case "AppThemeRed":
-                profileImage.setBackgroundColor(getResources().getColor(R.color.colorPrimaryRed));
+                profileBackgroundImage.setBackgroundColor(getResources().getColor(R.color.colorPrimaryRed));
                 break;
             case "AppThemeGreen":
-                profileImage.setBackgroundColor(getResources().getColor(R.color.colorPrimaryGreen));
+                profileBackgroundImage.setBackgroundColor(getResources().getColor(R.color.colorPrimaryGreen));
                 break;
         }
 
@@ -143,7 +150,23 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         navHeaderView = navigationView.getHeaderView(0);
-        profileImage = navHeaderView.findViewById(R.id.profile_image);
+        profileBackgroundImage = navHeaderView.findViewById(R.id.profile_background_image);
+        profilePicture = navHeaderView.findViewById(R.id.profile_picture);
+        profileName = navHeaderView.findViewById(R.id.profile_name);
+        profileJobTitle = navHeaderView.findViewById(R.id.profile_job_title);
+
+        navHeaderView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,SettingsActivity.class));
+            }
+        });
+        profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -422,9 +445,13 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
+        String changedPrefs = sharedPreferences.getString(key, "");
         if (key.equals(getString(R.string.prefs_theme_key))) {
-            String theme = sharedPreferences.getString(key, "");
-            Utils.changeToTheme(MainActivity.this, theme);
+            Utils.changeToTheme(MainActivity.this, changedPrefs);
+        }else if(key.equals(getString(R.string.prefs_job_key))){
+            profileJobTitle.setText(changedPrefs);
+        }else if(key.equals(getString(R.string.prefs_name_key))){
+            profileName.setText(changedPrefs);
         }
     }
 
