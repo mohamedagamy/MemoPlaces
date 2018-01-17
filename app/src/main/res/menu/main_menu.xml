@@ -8,13 +8,13 @@
         android:id="@+id/list_all"
         android:icon="@android:drawable/ic_menu_myplaces"
         android:title="@string/list_all"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/delete_all"
         android:icon="@android:drawable/ic_menu_delete"
         android:title="@string/delete_all"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/settings"

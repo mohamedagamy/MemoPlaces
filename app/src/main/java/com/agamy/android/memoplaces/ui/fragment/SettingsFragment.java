@@ -22,6 +22,8 @@ import com.agamy.android.memoplaces.R;
 import com.agamy.android.memoplaces.ui.activity.MainActivity;
 import com.agamy.android.memoplaces.ui.activity.Utils;
 
+import java.util.ListIterator;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -34,11 +36,11 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         String job = mSharedPreferences.getString(getString(R.string.prefs_job_key),"");
         String name = mSharedPreferences.getString(getString(R.string.prefs_name_key),"");
-        String theme = mSharedPreferences.getString(getString(R.string.prefs_theme_key),"");
 
         Preference jobPrefs = findPreference(getString(R.string.prefs_job_key));
         Preference namePrefs = findPreference(getString(R.string.prefs_name_key));
-        Preference themePrefs = findPreference(getString(R.string.prefs_theme_key));
+        ListPreference themePrefs = (ListPreference) findPreference(getString(R.string.prefs_theme_key));
+        String theme = themePrefs.getEntry().toString();
 
         jobPrefs.setSummary(job);
         namePrefs.setSummary(name);
@@ -59,8 +61,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        String changedPrefs = sharedPreferences.getString(key, "");
-        Preference preference = findPreference(key);
+        ListPreference preference = (ListPreference) findPreference(key);
+        String changedPrefs =preference.getEntry().toString();
         preference.setSummary(changedPrefs);
 
 

@@ -355,6 +355,14 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         }
     }
 
+    public int getRowsCount()
+    {
+        Cursor cursor = getContentResolver().query(PlacesEntry.CONTENT_URI, null, null, null, null);
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
     void loadEmptyFragmentView(int count) {
 
         if (count == 0) {
@@ -392,8 +400,12 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
                 NavUtils.navigateUpFromSameTask(this);
                 return true;*/
             case R.id.delete_all:
-                Toast.makeText(this, getString(R.string.delete_all_places), Toast.LENGTH_SHORT).show();
-                getContentResolver().delete(PlacesEntry.CONTENT_URI, null, null);
+                if(getRowsCount() > 0) {
+                    Toast.makeText(this, getString(R.string.delete_all_places), Toast.LENGTH_SHORT).show();
+                    showDeleteAllPopupDialog();
+                }else {
+                    Toast.makeText(this, "All places Already Deleted!", Toast.LENGTH_SHORT).show();
+                }
                 return true;
             case R.id.list_all:
                 Toast.makeText(this, getString(R.string.list_all_places), Toast.LENGTH_SHORT).show();
@@ -412,6 +424,31 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showDeleteAllPopupDialog() {
+
+        final iOSDialog iOSDialog = new iOSDialog(MainActivity.this);
+        iOSDialog.setTitle(getString(R.string.delete_all));
+        iOSDialog.setSubtitle("Are you sure to delete all places?");
+        iOSDialog.setPositiveLabel("Ok");
+        iOSDialog.setNegativeLabel("Cancel");
+        iOSDialog.setBoldPositiveLabel(true);
+        iOSDialog.setPositiveListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                iOSDialog.dismiss();
+                getContentResolver().delete(PlacesEntry.CONTENT_URI, null, null);
+                displayDatabaseData();
+            }
+        });
+        iOSDialog.setNegativeListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                iOSDialog.dismiss();
+            }
+        });
+        iOSDialog.show();
     }
 
     @Override
