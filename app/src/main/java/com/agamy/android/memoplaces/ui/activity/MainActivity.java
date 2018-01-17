@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -306,6 +307,17 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
     protected void onPause() {
         super.onPause();
         Log.e("act", "onPause");
+        if(drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START);
+        else
+            super.onBackPressed();
     }
 
     @Override
@@ -314,8 +326,8 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         Log.e("act", "OnResume");
         MyApp.getInstance().setConnectionListener(this);
         displayDatabaseData();
-    }
 
+    }
     private void displayDatabaseData() {
         Cursor cursor = null;
         try {
@@ -454,6 +466,7 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
             profileName.setText(changedPrefs);
         }
     }
+
 
 
 }
