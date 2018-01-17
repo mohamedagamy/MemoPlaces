@@ -76,7 +76,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     double latitude, longitude;
     static boolean countOnChangeCalls = false;
     Intent mIntent;
-    static String validKey = "";
+    static String myIntentKey = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         mIntent = getIntent();
 
         List<String> keys = Arrays.asList(FLOATING_ACTION_CLICK,RECYCLER_ITEM_CLICK,LIST_ALL_CLICK);
-        validKey = getIntentKeyWithTrueExtras(keys);
+        myIntentKey = getIntentKeyWithTrueExtras(keys);
 
     }
 
@@ -427,7 +427,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         //Here All Markers updates according to Intent Extras
         mapView.clear();
 
-        switch (validKey)
+        switch (myIntentKey)
         {
             case LIST_ALL_CLICK:
                 //If List All Markers
