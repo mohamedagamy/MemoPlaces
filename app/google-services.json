@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "219685534831-rfpctkfjmu613u38gmknj4qmbp831v4p.apps.googleusercontent.com",
+          "client_id": "219685534831-09qc8jqfmvo5nbhfi5bceuflu85c8452.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.agamy.android.memoplaces",
-            "certificate_hash": "8ee0e2fbfa9aa061865d2167c97197cd83a3d864"
+            "certificate_hash": "6da1f384dd797855d1150ccbee1c1a37a01a4bbe"
           }
         },
         {

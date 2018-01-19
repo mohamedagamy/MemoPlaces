@@ -19,5 +19,12 @@ public class Constants {
     public static final String TRAIN_STATION_TAG = "train_station";
     public static final String GAS_STATION_TAG = "gas_station";
 
+    public static final String BANK_TAG = "bank";
+    public static final String AIRPORT_TAG = "airport";
+    public static final String CAFE_TAG = "cafe";
+
+    public static final String HOTEL_TAG="room";
+    public static final String CINEMA_TAG="movie_theater";
+    public static final String ATM_TAG="atm";
     public static final String TRUE = "true";
 }

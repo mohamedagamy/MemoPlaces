@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--My places strings -->
     <string name="hospitals">المستشفيات</string>
     <string name="restaurants">المطاعم</string>
     <string name="schools">المدارس</string>
+    <string name="cafe">الكافيهات</string>
+    <string name="airports">المطارات</string>
+    <string name="banks">البنوك</string>
+    <string name="atm">ماكينات الصراف الألي</string>
+    <string name="hotel">الفنادق</string>
+    <string name="cinema">السينما</string>
+    <string name="bus_station">محطة الأتوبيس</string>
+    <string name="train_station">محطة القطار</string>
+    <string name="gas_station">محطة البنزين</string>
+    <!--***************************************-->
+
+
     <string name="mohamed_elagamy">محمد العجمي</string>
     <string name="android_developer">مطور أندرويد</string>
     <string name="delete_all">حذف الكل</string>
@@ -10,9 +23,6 @@
     <string name="delete_all_places">حذف كل الأماكن</string>
     <string name="list_all_places">عرض كل الأماكن</string>
     <string name="map_ready">تم تحميل الخريطة</string>
-    <string name="near_by_hospitals">اظهار المستشفيات القريبة</string>
-    <string name="near_by_restaurant">اظهار المطاعم القريبة</string>
-    <string name="near_by_schools">اظهار المدارس القريبة</string>
     <string name="all_markers_drawn">تم رسم جميع ايقونات تحديد المكان</string>
     <string name="map_long_click">تم الضغط لمدة طويلة</string>
     <string name="check_wifi_connection">تأكد من الاتصال بالانترنت </string>
@@ -21,18 +31,62 @@
     <string name="disconnected">غير متصل</string>
     <string name="close">أغلق</string>
     <string name="hello_blank_fragment">لا يوجد أماكن مفضلة حاليا!</string>
-    <string name="bus_station">محطة الأتوبيس</string>
-    <string name="train_station">محطة القطار</string>
-    <string name="gas_station">محطة البنزين</string>
+
+    <!--Near by places strings -->
+    <string name="near_by_hospitals">اظهار المستشفيات القريبة</string>
+    <string name="near_by_restaurant">اظهار المطاعم القريبة</string>
+    <string name="near_by_schools">اظهار المدارس القريبة</string>
     <string name="near_by_bus_station">اظهار محطات الاتوبيس القريبة</string>
     <string name="near_by_train_station">اظهار محطات القطار القريبة</string>
     <string name="near_by_gas_station"> اظهار محطات البنزين القريبة</string>
+    <string name="near_by_bank">اظهار البنوك القريبة</string>
+    <string name="near_by_airport">اظهار المطارات القريبة</string>
+    <string name="near_by_cafe">اظهار الكافيهات القريبة</string>
+    <string name="near_by_hotel">اظهار الفنادق القريبة</string>
+    <string name="near_by_atm">اظهار ماكينات الصراف الألي القريبة</string>
+    <string name="near_by_cinema">اظهار دور السينما القريبة</string>
+    <!--*************************************-->
+
+    <!--Far from places strings-->
     <string name="far_from_hospitals">لا يوجد مستفيات قريبة للأسف!</string>
     <string name="far_from_restaurant">لا يوجد مطاعم قريبة للأسف!</string>
     <string name="far_from_schools">لا يوجد مدارس قريبة للأسف!</string>
     <string name="far_from_bus_station">لا يوجد محطات أتوبيس قريبة للأسف!</string>
     <string name="far_from_train_station">لا يوجد محطات قطار قريبة للأسف!</string>
     <string name="far_from_gas_station">لا يوجد محطات قطار قريبة للأسف!</string>
+    <string name="far_from_bank">لا يوجد بنوك قريبة للأسف!</string>
+    <string name="far_from_airport">لا يوجد مطارات قريبة للأسف!</string>
+    <string name="far_from_cafe">لا يوجد كافيهات قريبة للأسف!</string>
+    <string name="far_from_cinema">لا يوجد سينما قريبة للأسف!</string>
+    <string name="far_from_hotel">لا يوجد فندق قريب للأسف!</string>
+    <string name="far_from_atm">لا يوجد ماكينات صراف ألي قريبة للأسف!</string>
+    <!--***********************************************-->
+
+
     <string name="stations">المحطات القريبة</string>
     <string name="settings">الاعدادات</string>
+    <string name="enter_your_job_title">من فضلك أدخل وظيفتك </string>
+    <string name="enter_your_name">من فضلك أدخل اسمك </string>
+    <string name="personal_details">التفاصيل الشخصية</string>
+    <string name="choose_your_theme">اختار لونك المفضل </string>
+    <string name="theme_color">Theme</string>
+
+    <string-array name="themes_values">
+        <item>Default Theme</item>
+        <item>Red Theme</item>
+        <item>Green Theme</item>
+        <item>Orange Theme</item>
+    </string-array>
+
+    <string-array name="themes_keys">
+        <item>AppTheme</item>
+        <item>AppThemeRed</item>
+        <item>AppThemeGreen</item>
+        <item>AppThemeOrange</item>
+    </string-array>
+
+    <string name="title_activity_settings">Settings</string>
+    <string name="prefs_name_key">prefs_name_key</string>
+    <string name="prefs_job_key">prefs_job_key</string>
+
 </resources>

@@ -158,6 +158,19 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             case Constants.GAS_STATION_TAG:
                 return mContext.getString(R.string.near_by_gas_station);
 
+            case Constants.BANK_TAG:
+                return mContext.getString(R.string.near_by_bank);
+            case Constants.AIRPORT_TAG:
+                return mContext.getString(R.string.near_by_airport);
+            case Constants.CAFE_TAG:
+                return mContext.getString(R.string.near_by_cafe);
+            case Constants.CINEMA_TAG:
+                return mContext.getString(R.string.near_by_cinema);
+            case Constants.HOTEL_TAG:
+                return mContext.getString(R.string.near_by_hotel);
+            case Constants.ATM_TAG:
+                return mContext.getString(R.string.near_by_atm);
+
             default:
                 return "";
         }
@@ -179,8 +192,20 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 return mContext.getString(R.string.far_from_bus_station);
             case Constants.TRAIN_STATION_TAG:
                 return mContext.getString(R.string.far_from_train_station);
-            case Constants.GAS_STATION_TAG:
-                return mContext.getString(R.string.far_from_gas_station);
+
+            case Constants.BANK_TAG:
+                return mContext.getString(R.string.far_from_bank);
+            case Constants.AIRPORT_TAG:
+                return mContext.getString(R.string.far_from_airport);
+            case Constants.CAFE_TAG:
+                return mContext.getString(R.string.far_from_cafe);
+            case Constants.CINEMA_TAG:
+                return mContext.getString(R.string.far_from_cinema);
+            case Constants.HOTEL_TAG:
+                return mContext.getString(R.string.far_from_hotel);
+            case Constants.ATM_TAG:
+                return mContext.getString(R.string.far_from_atm);
+
 
             default:
                 return "";

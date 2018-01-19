@@ -1,14 +1,58 @@
 <resources>
-    <string name="app_name">MemoPlaces</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="openDrawer">Open</string>
-    <string name="closeDrawer">Close</string>
+    <string name="app_name" translatable="false">MemoPlaces</string>
+    <string name="title_activity_maps" translatable="false">Map</string>
+    <string name="openDrawer" translatable="false">Open</string>
+    <string name="closeDrawer" translatable="false">Close</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">There is no saved places available!</string>
+
+    <!--My Places Strings-->
     <string name="hospitals">Hospitals</string>
     <string name="restaurants">Restaurants</string>
     <string name="schools">Schools</string>
+    <string name="cafe">Cafes</string>
+    <string name="airports">Airports</string>
+    <string name="banks">Banks</string>
+    <string name="atm">ATM</string>
+    <string name="hotel">Hotels</string>
+    <string name="cinema">Cinema</string>
+    <string name="bus_station">Bus Station</string>
+    <string name="train_station">Train Station</string>
+    <string name="gas_station">Gas Station</string>
+    <!--*****************************************-->
+
+    <!--Near By Places Strings -->
+    <string name="near_by_hospitals">Showing near by hospitals</string>
+    <string name="near_by_restaurant">Showing near by restaurants</string>
+    <string name="near_by_schools">Showing near by schools</string>
+    <string name="near_by_bank">Showing near by banks</string>
+    <string name="near_by_airport">Showing near by airports</string>
+    <string name="near_by_cafe">Showing near by cafe</string>
+    <string name="near_by_hotel">Showing near by hotel</string>
+    <string name="near_by_atm">Showing near by atm</string>
+    <string name="near_by_cinema">Showing near by cinema</string>
+    <string name="near_by_bus_station">Showing near by Bus Station</string>
+    <string name="near_by_train_station">Showing near by Train Station</string>
+    <string name="near_by_gas_station">Showing near by gas station</string>
+    <!--***********************************************************-->
+
+    <!--Far from places-->
+    <string name="far_from_hospitals">There is no near by hospitals.</string>
+    <string name="far_from_restaurant">There is no near by restaurant</string>
+    <string name="far_from_schools">There is no near by schools</string>
+    <string name="far_from_bank">There is no near by banks</string>
+    <string name="far_from_airport">There is no near by airports</string>
+    <string name="far_from_cafe">There is no near by cafes</string>
+    <string name="far_from_cinema">There is no near by cinemas</string>
+    <string name="far_from_hotel">There is no near by hotels</string>
+    <string name="far_from_atm">There is no near by atms</string>
+    <string name="far_from_bus_station">There is no near by bus stations</string>
+    <string name="far_from_train_station">There is no near by train stations</string>
+    <string name="far_from_gas_station">There is no near by gas stations</string>
+    <!--************************************************-->
+
+
     <string name="mohamed_elagamy">Mohamed Elagamy</string>
     <string name="android_developer">Android Developer</string>
     <string name="delete_all">Delete All</string>
@@ -23,26 +67,10 @@
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
     <string name="close">Close</string>
-    <string name="bus_station">Bus Station</string>
-    <string name="train_station">Train Station</string>
-    <string name="gas_station">Gas Station</string>
 
-    <string name="near_by_hospitals">Showing near by hospitals</string>
-    <string name="near_by_restaurant">Showing near by restaurants</string>
-    <string name="near_by_schools">Showing near by schools</string>
-    <string name="near_by_bus_station">Showing near by Bus Station</string>
-    <string name="near_by_train_station">Showing near by Train Station</string>
-    <string name="near_by_gas_station">Showing near by gas station</string>
-
-    <string name="far_from_hospitals">There is no near by hospitals.</string>
-    <string name="far_from_restaurant">There is no near by restaurant</string>
-    <string name="far_from_schools">There is no near by schools</string>
-    <string name="far_from_bus_station">There is no near by bus stations</string>
-    <string name="far_from_train_station">There is no near by train stations</string>
-    <string name="far_from_gas_station">There is no near by gas stations</string>
     <string name="stations">Stations</string>
     <string name="settings">Settings</string>
-    <string name="prefs_theme_key">prefs_theme_key</string>
+    <string name="prefs_theme_key" translatable="false">prefs_theme_key</string>
 
     <string-array name="themes_values">
         <item>Default Theme</item>
@@ -58,79 +86,13 @@
         <item>AppThemeOrange</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
-
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value" />
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
     <string name="prefs_name_key">prefs_name_key</string>
     <string name="prefs_job_key">prefs_job_key</string>
+    <string name="enter_your_job_title">Enter your job title</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="personal_details">Personal Details</string>
+    <string name="choose_your_theme">Choose your theme</string>
+    <string name="theme_color">Theme</string>
+
 
 </resources>

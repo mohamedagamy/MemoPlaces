@@ -25,6 +25,55 @@
             android:checkable="false"
             android:enabled="true"
             android:visible="true" />
+        <item
+            android:id="@+id/nav_bank"
+            android:title="@string/banks"
+            android:icon="@drawable/ic_account_balance_black_24dp"
+            android:checkable="false"
+            android:enabled="true"
+            android:visible="true" />
+
+        <item
+            android:id="@+id/nav_airport"
+            android:title="@string/airports"
+            android:icon="@drawable/ic_local_airport_black_24dp"
+            android:checkable="false"
+            android:enabled="true"
+            android:visible="true" />
+
+        <item
+            android:id="@+id/nav_cafe"
+            android:title="@string/cafe"
+            android:icon="@drawable/ic_local_cafe_black_24dp"
+            android:checkable="false"
+            android:enabled="true"
+            android:visible="true" />
+
+        <item
+            android:id="@+id/nav_cinema"
+            android:title="@string/cinema"
+            android:icon="@drawable/ic_local_movies_black_24dp"
+            android:checkable="false"
+            android:enabled="true"
+            android:visible="true" />
+
+        <item
+            android:id="@+id/nav_hotel"
+            android:title="@string/hotel"
+            android:icon="@drawable/ic_local_hotel_black_24dp"
+            android:checkable="false"
+            android:enabled="true"
+            android:visible="true" />
+
+        <item
+            android:id="@+id/nav_atm"
+            android:title="@string/atm"
+            android:icon="@drawable/ic_local_atm_black_24dp"
+            android:checkable="false"
+            android:enabled="true"
+            android:visible="true" />
+
+
     </group>
 
     <item android:enabled="true" android:title="@string/stations">

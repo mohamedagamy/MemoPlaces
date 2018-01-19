@@ -229,6 +229,60 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
                         startActivity(intent);
                         break;
 
+                    case R.id.nav_bank:
+                        Toast.makeText(MainActivity.this, getString(R.string.banks), Toast.LENGTH_SHORT).show();
+                        //navItemIndex = 2;
+                        //CURRENT_TAG = SCHOOL_TAG;
+                        intent = new Intent(MainActivity.this, MapsActivity.class);
+                        intent.putExtra(FRAGMENT_CURRENT_TAG, BANK_TAG);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.nav_airport:
+                        Toast.makeText(MainActivity.this, getString(R.string.airports), Toast.LENGTH_SHORT).show();
+                        //navItemIndex = 2;
+                        //CURRENT_TAG = SCHOOL_TAG;
+                        intent = new Intent(MainActivity.this, MapsActivity.class);
+                        intent.putExtra(FRAGMENT_CURRENT_TAG, AIRPORT_TAG);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.nav_cafe:
+                        Toast.makeText(MainActivity.this, getString(R.string.cafe), Toast.LENGTH_SHORT).show();
+                        //navItemIndex = 2;
+                        //CURRENT_TAG = SCHOOL_TAG;
+                        intent = new Intent(MainActivity.this, MapsActivity.class);
+                        intent.putExtra(FRAGMENT_CURRENT_TAG, CAFE_TAG);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.nav_hotel:
+                        Toast.makeText(MainActivity.this, getString(R.string.hotel), Toast.LENGTH_SHORT).show();
+                        //navItemIndex = 2;
+                        //CURRENT_TAG = SCHOOL_TAG;
+                        intent = new Intent(MainActivity.this, MapsActivity.class);
+                        intent.putExtra(FRAGMENT_CURRENT_TAG, HOTEL_TAG);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.nav_cinema:
+                        Toast.makeText(MainActivity.this, getString(R.string.cinema), Toast.LENGTH_SHORT).show();
+                        //navItemIndex = 2;
+                        //CURRENT_TAG = SCHOOL_TAG;
+                        intent = new Intent(MainActivity.this, MapsActivity.class);
+                        intent.putExtra(FRAGMENT_CURRENT_TAG, CINEMA_TAG);
+                        startActivity(intent);
+                        break;
+
+                    case R.id.nav_atm:
+                        Toast.makeText(MainActivity.this, getString(R.string.gas_station), Toast.LENGTH_SHORT).show();
+                        //navItemIndex = 2;
+                        //CURRENT_TAG = SCHOOL_TAG;
+                        intent = new Intent(MainActivity.this, MapsActivity.class);
+                        intent.putExtra(FRAGMENT_CURRENT_TAG, ATM_TAG);
+                        startActivity(intent);
+                        break;
+
                 }
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 drawerLayout.closeDrawers();
