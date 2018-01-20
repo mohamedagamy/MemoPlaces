@@ -239,6 +239,9 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
             e.printStackTrace();
         } catch (GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
+        }catch (Exception ex)
+        {
+            ex.printStackTrace();
         }
     }
 
