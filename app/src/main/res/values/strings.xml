@@ -93,6 +93,7 @@
     <string name="personal_details">Personal Details</string>
     <string name="choose_your_theme">Choose your theme</string>
     <string name="theme_color">Theme</string>
+    <string name="place_already_saved">This place is previously saved</string>
 
 
 </resources>

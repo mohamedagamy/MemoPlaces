@@ -2,6 +2,7 @@ package com.agamy.android.memoplaces.ui.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -25,6 +27,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.agamy.android.memoplaces.R;
+import com.agamy.android.memoplaces.database.PlacesContract;
 import com.agamy.android.memoplaces.listener.MapListener;
 import com.agamy.android.memoplaces.model.PlaceModel;
 import com.agamy.android.memoplaces.route.DirectionsJSONParser;
@@ -289,8 +292,21 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         values.put(PlacesEntry.COLUMN_PLACE_LATITUDE, placeModel.getLatitude());
         values.put(PlacesEntry.COLUMN_PLACE_LONGITUDE, placeModel.getLongitude());
         values.put(PlacesEntry.COLUMN_PLACE_ADDRESS, placeModel.getAddress());
-        //values.put(PlacesEntry.COLUMN_PLACE_COUNTRY, placeModel.getCountry());
+        values.put(PlacesEntry.COLUMN_PLACE_COUNTRY, placeModel.getCountry());
         getContentResolver().insert(PlacesEntry.CONTENT_URI, values);
+    }
+
+    private boolean isPlaceExistInSql(PlaceModel placeModel) {
+        String selection =
+                PlacesEntry.COLUMN_PLACE_LONGITUDE+" =? AND "+
+                PlacesEntry.COLUMN_PLACE_LATITUDE+" =? ";
+        String[] selectionArgs = new String[]{
+                String.valueOf(placeModel.getLongitude()),
+                String.valueOf(placeModel.getLatitude())};
+        Cursor cursor = getContentResolver().query(PlacesEntry.CONTENT_URI,null,selection,selectionArgs,null);
+        int count = cursor.getCount();
+        cursor.close();
+        return (count > 0);
     }
 
     @Override
@@ -582,7 +598,12 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
                     String country = addressArray[addressArray.length-1];
 
                     PlaceModel placeModel = new PlaceModel(lat, lng, address,country);
-                    insertNewPlace(placeModel);
+                    boolean isPlaceExist = isPlaceExistInSql(placeModel);
+                    if(!isPlaceExist) {
+                        insertNewPlace(placeModel);
+                    }else {
+                        Toast.makeText(this, R.string.place_already_saved, Toast.LENGTH_SHORT).show();
+                    }
 
                     //Clear Map , Draw One Marker , Animate Camera to that Location
                     mapView.clear();
