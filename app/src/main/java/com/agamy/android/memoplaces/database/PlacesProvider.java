@@ -59,9 +59,11 @@ public class PlacesProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
-
-        cursor.setNotificationUri(getContext().getContentResolver() , uri);
-        cursor.moveToFirst();
+        if(cursor != null) {
+            if(getContext() != null)
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+            cursor.moveToFirst();
+        }
         return cursor;
     }
 
@@ -113,8 +115,10 @@ public class PlacesProvider extends ContentProvider {
             return null;
         }
 
-        if(id > 0)
-            getContext().getContentResolver().notifyChange(uri,null);
+        if(id > 0) {
+            if(getContext() != null)
+                getContext().getContentResolver().notifyChange(uri, null);
+        }
         return ContentUris.withAppendedId(uri, id);
     }
 
@@ -123,8 +127,10 @@ public class PlacesProvider extends ContentProvider {
         String whereClause= PlacesEntry._ID+" = ?";
         int rowId = db.delete(PlacesEntry.TABLE_NAME,whereClause,strings);
 
-        if(rowId > 0)
-            getContext().getContentResolver().notifyChange(uri,null);
+        if(rowId > 0) {
+            if(getContext() != null)
+                getContext().getContentResolver().notifyChange(uri, null);
+        }
         return rowId;
     }
 
@@ -133,8 +139,10 @@ public class PlacesProvider extends ContentProvider {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         int rowId = db.delete(PlacesEntry.TABLE_NAME,null,null);
 
-        if(rowId > 0)
-            getContext().getContentResolver().notifyChange(uri,null);
+        if(rowId > 0){
+            if(getContext() != null)
+                getContext().getContentResolver().notifyChange(uri,null);
+        }
         return rowId;
     }
 
