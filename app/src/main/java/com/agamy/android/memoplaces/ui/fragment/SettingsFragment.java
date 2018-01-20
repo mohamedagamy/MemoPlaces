@@ -28,6 +28,9 @@ import java.util.ListIterator;
  * A simple {@link Fragment} subclass.
  */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+    public SettingsFragment() {
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +57,14 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
     public void onDestroy() {
-        super.onDestroy();
        getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
     }
 
     @Override

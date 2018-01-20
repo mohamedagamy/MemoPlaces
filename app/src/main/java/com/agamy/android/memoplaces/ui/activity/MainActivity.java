@@ -159,7 +159,9 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         navHeaderView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this,SettingsActivity.class));
+                Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
             }
         });
         profilePicture.setOnClickListener(new View.OnClickListener() {
