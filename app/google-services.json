@@ -15,7 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "219685534831-09qc8jqfmvo5nbhfi5bceuflu85c8452.apps.googleusercontent.com",
+          "client_id": "219685534831-uc7uvhj2gran44c120bgqsuclf4adlhv.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "219685534831-0lsm2jj717u492aga0i49kmtus4ro5e8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.agamy.android.memoplaces",
@@ -23,13 +27,17 @@
           }
         },
         {
-          "client_id": "219685534831-naj8qsasjocvqmgsu0nnqt0o0ovhsm8h.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "219685534831-stj0gd1q878sio93rrpheidn7d4ol7b8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.agamy.android.memoplaces",
+            "certificate_hash": "ea7212d1ca9ea4ad524b6d233fd83cf265a1028b"
+          }
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCAJENqMJTjNLRSbVFQl8zmUwZx29bB-i4"
+          "current_key": "AIzaSyCxBIOFq9hSK-x7yn9bgicLJAYILaX3MRs"
         }
       ],
       "services": {
@@ -40,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "219685534831-naj8qsasjocvqmgsu0nnqt0o0ovhsm8h.apps.googleusercontent.com",
+              "client_id": "219685534831-uc7uvhj2gran44c120bgqsuclf4adlhv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
