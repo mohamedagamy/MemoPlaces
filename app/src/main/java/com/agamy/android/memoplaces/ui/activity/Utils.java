@@ -50,9 +50,11 @@ public class Utils {
 
     public static void changeToTheme(Activity activity, String theme) {
         sTheme = theme;
-        //activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-        if(activity instanceof SettingsActivity)
-          activity.finish();
+
+        if(activity.getClass().getSimpleName().equals("SettingsActivity")) {
+            activity.finish();
+        }
+
         Intent intent = new Intent(activity, activity.getClass());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(activity,
