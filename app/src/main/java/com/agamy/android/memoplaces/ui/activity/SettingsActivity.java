@@ -1,16 +1,15 @@
 package com.agamy.android.memoplaces.ui.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.content.res.TypedArrayUtils;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
@@ -26,9 +25,6 @@ import com.agamy.android.memoplaces.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
-import adapter.CustomAdapter;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
      Toolbar toolbar;
@@ -36,7 +32,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
      SharedPreferences mSharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Utils.onActivityCreateSetTheme(this);
+        Utils.onActivityChangeTheme(SettingsActivity.this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         toolbar = findViewById(R.id.toolbar);
@@ -121,16 +117,34 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         switch (item.getItemId())
         {
             case android.R.id.home:
-                //finish();
+                startMainActivity();
                 break;
 
         }
 
 
-
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startMainActivity();
+    }
+
+    void startMainActivity()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(this,
+                    android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
+            startActivity(intent, bundle);
+        } else {
+           startActivity(intent);
+        }
+        finish();
+    }
     public void chooseThemeColor(View view) {
         Toast.makeText(this, "Color Selected", Toast.LENGTH_SHORT).show();
     }
@@ -147,8 +161,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         String changedPrefs = sharedPreferences.getString(key, "");
         Log.e("",changedPrefs);
-        if (key.equals(getString(R.string.prefs_theme_key)))
-            Utils.changeToTheme(SettingsActivity.this, changedPrefs);
+        Utils.onActivityRecreate(SettingsActivity.this);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.agamy.android.memoplaces.ui.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -27,7 +25,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.agamy.android.memoplaces.R;
-import com.agamy.android.memoplaces.database.PlacesContract;
 import com.agamy.android.memoplaces.listener.MapListener;
 import com.agamy.android.memoplaces.model.PlaceModel;
 import com.agamy.android.memoplaces.route.DirectionsJSONParser;
@@ -83,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Utils.onActivityCreateSetTheme(this);
+        Utils.onActivityChangeTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         initComponents();

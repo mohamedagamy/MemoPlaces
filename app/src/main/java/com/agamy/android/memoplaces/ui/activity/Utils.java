@@ -20,7 +20,6 @@ import com.kaopiz.kprogresshud.KProgressHUD;
  */
 
 public class Utils {
-    private static String sTheme = "AppTheme";
     private KProgressHUD progressHUD;
 
     static boolean isWifiEnabled(Context context) {
@@ -48,19 +47,17 @@ public class Utils {
 
     }
 
-    public static void changeToTheme(Activity activity, String theme) {
-        sTheme = theme;
+    public static void onActivityRecreate(Activity activity) {
 
-        if(activity.getClass().getSimpleName().equals("SettingsActivity")) {
-            activity.finish();
-        }
+        activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        activity.finish();
 
-        Intent intent = new Intent(activity, activity.getClass());
+        Intent intent = new Intent(activity , activity.getClass());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             Bundle bundle = ActivityOptionsCompat.makeCustomAnimation(activity,
                     android.R.anim.fade_in, android.R.anim.fade_out).toBundle();
-            activity.startActivity(intent,bundle);
-        }else {
+            activity.startActivity(intent, bundle);
+        } else {
             activity.startActivity(intent);
         }
     }
@@ -70,12 +67,12 @@ public class Utils {
      *
      * @param activity
      */
-    public static void onActivityCreateSetTheme(Activity activity) {
+    public static void onActivityChangeTheme(Activity activity) {
 
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
         String myTheme = mSharedPreferences.getString(activity.getString(R.string.prefs_theme_key), "");
-        sTheme = myTheme;
-        switch (sTheme) {
+
+        switch (myTheme) {
             case "AppTheme":
                 activity.setTheme(R.style.AppTheme);
                 break;

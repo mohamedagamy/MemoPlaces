@@ -1,10 +1,7 @@
 package com.agamy.android.memoplaces.ui.activity;
 
-import android.content.ContentValues;
 import android.content.SharedPreferences;
-import android.preference.PreferenceFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -22,8 +18,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,7 +28,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,24 +42,8 @@ import java.util.List;
 import com.agamy.android.memoplaces.database.PlacesContract.PlacesEntry;
 import com.agamy.android.memoplaces.app.MyApp;
 import com.agamy.android.memoplaces.app.MyConnectivityReceiver;
-import com.agamy.android.memoplaces.services.MyJobSevice;
 import com.agamy.android.memoplaces.ui.fragment.EmptyViewFragment;
-import com.firebase.jobdispatcher.Constraint;
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Job;
-import com.firebase.jobdispatcher.JobService;
-import com.firebase.jobdispatcher.JobTrigger;
-import com.firebase.jobdispatcher.Lifetime;
-import com.firebase.jobdispatcher.RetryStrategy;
-import com.firebase.jobdispatcher.Trigger;
 import com.gdacciaro.iOSDialog.iOSDialog;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.kaopiz.kprogresshud.KProgressHUD;
 
 
 import adapter.CustomAdapter;
@@ -95,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Utils.onActivityCreateSetTheme(this);
+        Utils.onActivityChangeTheme(MainActivity.this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initComponents();
@@ -555,7 +532,7 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
 
         String changedPrefs = sharedPreferences.getString(key, "");
         if (key.equals(getString(R.string.prefs_theme_key))) {
-            Utils.changeToTheme(MainActivity.this, changedPrefs);
+            Utils.onActivityRecreate(MainActivity.this);
         }else if(key.equals(getString(R.string.prefs_job_key))){
             profileJobTitle.setText(changedPrefs);
         }else if(key.equals(getString(R.string.prefs_name_key))){
