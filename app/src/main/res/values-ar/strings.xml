@@ -89,5 +89,7 @@
     <string name="prefs_name_key">prefs_name_key</string>
     <string name="prefs_job_key">prefs_job_key</string>
     <string name="place_already_saved">هذا المكان تم حفظة مسبقا!</string>
+    <string name="full_name">الاسم بالكامل</string>
+    <string name="job_title">الوظيفة</string>
 
 </resources>

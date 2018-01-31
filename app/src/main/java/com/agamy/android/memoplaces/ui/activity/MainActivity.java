@@ -85,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         String myTheme = mSharedPreferences.getString(getString(R.string.prefs_theme_key), "");
-        String myName = mSharedPreferences.getString(getString(R.string.prefs_name_key), "");
-        String myJobTitle = mSharedPreferences.getString(getString(R.string.prefs_job_key), "");
+        String myName = mSharedPreferences.getString(getString(R.string.prefs_name_key), getString(R.string.full_name));
+        String myJobTitle = mSharedPreferences.getString(getString(R.string.prefs_job_key), getString(R.string.job_title));
 
         profileName.setText(myName);
         profileJobTitle.setText(myJobTitle);
@@ -107,23 +107,6 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
                 profileBackgroundImage.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
         }
-
-    }
-
-    private void showDemoPopupDialog() {
-
-        final iOSDialog iOSDialog = new iOSDialog(MainActivity.this);
-        iOSDialog.setTitle("Tips to use this app");
-        iOSDialog.setSubtitle("1-Click (bottom right) button \n 2-Choose Place you want \n 3-Swipe/Drag Items Left/Right to delete saved places ");
-        iOSDialog.setPositiveLabel("Ok");
-        iOSDialog.setBoldPositiveLabel(true);
-        iOSDialog.setPositiveListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                iOSDialog.dismiss();
-            }
-        });
-        iOSDialog.show();
 
     }
 

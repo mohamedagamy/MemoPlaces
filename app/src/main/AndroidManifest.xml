@@ -101,7 +101,6 @@
             </intent-filter>
         </service>
         -->
-        <activity android:name=".ui.activity.SettingActivity"></activity>
     </application>
 
 </manifest>

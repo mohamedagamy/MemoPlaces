@@ -57,17 +57,17 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                         showCustomThemeDialog();
                         break;
                     case 1:
-                        showEditTextInputDialog("Full Name",getString(R.string.enter_your_name) , getString(R.string.prefs_name_key));
+                        showEditTextInputDialog(getString(R.string.full_name),getString(R.string.enter_your_name) , getString(R.string.prefs_name_key));
                         break;
                     case 2:
-                        showEditTextInputDialog("Job Title",getString(R.string.enter_your_job_title),getString(R.string.prefs_job_key));
+                        showEditTextInputDialog(getString(R.string.job_title),getString(R.string.enter_your_job_title),getString(R.string.prefs_job_key));
                         break;
                 }
             }
         });
     }
 
-    private void showEditTextInputDialog(String head , String body , final String sharedPrefKey) {
+    private void showEditTextInputDialog(final String head , String body , final String sharedPrefKey) {
 
         String currentValue = mSharedPreferences.getString(sharedPrefKey ,"");
         new MaterialDialog.Builder(this)
@@ -77,10 +77,9 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                 .input(null, currentValue, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                        if(!input.toString().isEmpty()) {
+                        if(!input.toString().isEmpty())
                             Toast.makeText(SettingsActivity.this, "" + input, Toast.LENGTH_SHORT).show();
-                            mSharedPreferences.edit().putString(sharedPrefKey , input.toString()).apply();
-                        }
+                        mSharedPreferences.edit().putString(sharedPrefKey , input.toString()).apply();
                     }
                 })
                 .contentColor(Color.BLACK)
@@ -102,7 +101,8 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                          * If you use alwaysCallSingleChoiceCallback(), which is discussed below,
                          * returning false here won't allow the newly selected radio button to actually be selected.
                          **/
-                        mSharedPreferences.edit().putString(getString(R.string.prefs_theme_key) , itemkeys[which]).apply();
+                        if(which != -1)
+                          mSharedPreferences.edit().putString(getString(R.string.prefs_theme_key) , itemkeys[which]).apply();
                         //Toast.makeText(SettingsActivity.this, ""+which, Toast.LENGTH_SHORT).show();
                         return true;
                     }
@@ -144,17 +144,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
            startActivity(intent);
         }
         finish();
-    }
-    public void chooseThemeColor(View view) {
-        Toast.makeText(this, "Color Selected", Toast.LENGTH_SHORT).show();
-    }
-
-    public void enterJobTitle(View view) {
-        Toast.makeText(this, "Job Title", Toast.LENGTH_SHORT).show();
-    }
-
-    public void enterFullName(View view) {
-        Toast.makeText(this, "Full Name", Toast.LENGTH_SHORT).show();
     }
 
     @Override
