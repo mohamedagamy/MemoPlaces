@@ -126,6 +126,9 @@ public class MainActivity extends AppCompatActivity implements CustomAdapter.OnI
             case "AppThemeGreen":
                 profileBackgroundImage.setBackgroundColor(getResources().getColor(R.color.colorPrimaryGreen));
                 break;
+            default:
+                profileBackgroundImage.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+
         }
 
     }

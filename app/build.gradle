@@ -37,8 +37,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.firebase:firebase-messaging:11.8.0'
-    implementation 'com.firebaseui:firebase-ui-auth:3.2.1'
+    //implementation 'com.firebaseui:firebase-ui-auth:3.2.1'
 
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 
     // Firebase Authentication
     compile 'com.google.firebase:firebase-auth:11.8.0'
@@ -68,5 +69,6 @@ dependencies {
     compile 'com.gdacciaro:iosdialog:1.0.2'
     compile 'com.google.code.gson:gson:2.8.2'
 }
+
 
 apply plugin: 'com.google.gms.google-services'
