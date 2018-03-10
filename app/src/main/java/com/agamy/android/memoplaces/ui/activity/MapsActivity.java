@@ -77,6 +77,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     static boolean countOnChangeCalls = false;
     Intent mIntent;
     static String myIntentKey = "";
+    public static GetNearbyPlacesData getNearbyPlacesData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +157,7 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
             handler.removeCallbacks(runnable);
 
         countOnChangeCalls = false;
-
+        getNearbyPlacesData = null;
     }
 
     /**
@@ -191,21 +192,23 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
         this.onMapReadyNow();
     }
 
-    private void showNearByPlaces()
-    {
+    private void showNearByPlaces() {
 
         String fragmentTag = mIntent.getStringExtra(FRAGMENT_CURRENT_TAG);
-        if(fragmentTag != null) {
+        if (fragmentTag != null) {
             Object dataTransfer[] = new Object[2];
-            GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData(MapsActivity.this,fragmentTag);
-            mapView.clear();
-            zoomAndDrawMyLocation();
 
-            String url = getUrl(latitude, longitude, fragmentTag);
-            dataTransfer[0] = mapView;
-            dataTransfer[1] = url;
-            if(Utils.isWifiEnabled(getBaseContext())) {
-                getNearbyPlacesData.execute(dataTransfer);
+            if(getNearbyPlacesData == null) {
+                getNearbyPlacesData = new GetNearbyPlacesData(MapsActivity.this, fragmentTag);
+                mapView.clear();
+                zoomAndDrawMyLocation();
+
+                String url = getUrl(latitude, longitude, fragmentTag);
+                dataTransfer[0] = mapView;
+                dataTransfer[1] = url;
+                if (Utils.isWifiEnabled(getBaseContext())) {
+                    getNearbyPlacesData.execute(dataTransfer);
+                }
             }
         }
 
@@ -309,36 +312,11 @@ public class MapsActivity extends FragmentActivity implements Observer, OnMapRea
     @Override
     public void onLocationChanged(Location userLocation) {
 
-        latitude = userLocation.getLatitude();
-        longitude = userLocation.getLongitude();
-
-        if(!countOnChangeCalls) {
-            showNearByPlaces();
-            countOnChangeCalls = true;
-        }
-
-        if(mLocation != null)
-            saveMyLocationToSharedPrefs(mLocation);
-        boolean isNewLocation = userLocation.getLatitude() != getMyLocationFromShard().get(0) &&
-                userLocation.getLongitude() != getMyLocationFromShard().get(1);
-        if(isNewLocation)
-        {
-            showNearByPlaces();
+        if(userLocation != null) {
             mLocation = userLocation;
-            LatLng srcLocation = null;
-            LatLng dstLocation = null;
-            if(mPlaceModel != null)
-             dstLocation = new LatLng(mPlaceModel.getLatitude(), mPlaceModel.getLongitude());
-            if(mLocation != null)
-                 srcLocation = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-            //Here Route Track call is made
-            if(DirectionsJSONParser.ParserTask.getPolylineOptions() == null && srcLocation != null && dstLocation != null) {
-                if(Utils.isWifiEnabled(MapsActivity.this))
-                  drawRoute(srcLocation, dstLocation);
-                else
-                    Toast.makeText(this, getString(R.string.check_wifi_connection), Toast.LENGTH_LONG).show();
-            }
-            Log.e("Current Location", mLocation.getLatitude() + "" + mLocation.getLongitude());
+            latitude = userLocation.getLatitude();
+            longitude = userLocation.getLongitude();
+            showNearByPlaces();
         }
     }
 

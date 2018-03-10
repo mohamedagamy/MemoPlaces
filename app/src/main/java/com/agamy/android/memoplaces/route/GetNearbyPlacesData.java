@@ -84,20 +84,8 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             }
 
         }
-
-        new CountDownTimer(1000, 8000) {
-            @Override
-            public void onTick(long l) {
-
-            }
-
-            @Override
-            public void onFinish() {
-                utils.hideProgressDialog();
-            }
-        }.start();
-
-        super.onPostExecute(s);
+            utils.hideProgressDialog();
+            super.onPostExecute(s);
     }
 
     private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList) {
@@ -113,7 +101,8 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             LatLng latLng = new LatLng(lat, lng);
             markerOptions.position(latLng);
             markerOptions.title(placeName + " : " + vicinity);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+            int resourecIcon = getResourceIcon();
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(resourecIcon));
 
             mMap.addMarker(markerOptions);
             //markerOptionsList.add(markerOptions);
@@ -211,5 +200,36 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
                 return "";
         }
 
+    }
+
+    public int getResourceIcon() {
+
+        switch (mFragmentTag)
+        {
+            case Constants.HOSPITAL_TAG:
+                return R.drawable.ic_local_hospital_black_24dp;
+            case Constants.RESTAURANT_TAG:
+                return R.drawable.ic_restaurant_black_24dp;
+            case Constants.SCHOOL_TAG:
+                return R.drawable.ic_school_black_24dp;
+            case Constants.BUS_STATION_TAG:
+                return R.drawable.ic_directions_bus_black_24dp;
+            case Constants.TRAIN_STATION_TAG:
+                return R.drawable.ic_train_black_24dp;
+
+            case Constants.BANK_TAG:
+                return R.drawable.ic_account_balance_black_24dp;
+            case Constants.AIRPORT_TAG:
+                return R.drawable.ic_local_airport_black_24dp;
+            case Constants.CAFE_TAG:
+                return R.drawable.ic_local_cafe_black_24dp;
+            case Constants.CINEMA_TAG:
+                return R.drawable.ic_local_movies_black_24dp;
+            case Constants.HOTEL_TAG:
+                return R.drawable.ic_local_hotel_black_24dp;
+            case Constants.ATM_TAG:
+                return R.drawable.ic_local_atm_black_24dp;
+        }
+        return 0;
     }
 }
